@@ -1,0 +1,8 @@
++----------------------------------------------------------------------------------------------------------+
+|         Name         |                          Description                                   |  values  |
+|----------------------+------------------------------------------------------------------------+----------|
+| help . . . . . . . . | opens this list of commands . . . . . . . . . . . . . . . . . . . . .  | nothing  |
+| setport  . . . . . . | changes port . . . . . . . . . . . . . . . . . . . . . . . . . . . . . | number   |
+| openserver . . . . . | starts the server, both on localhost and on IP . . . . . . . . . . . . | nothing  |
+| autoopensite . . . . | opens a browser with the page running when the server is turned on . . | boolean  |
++----------------------------------------------------------------------------------------------------------+
