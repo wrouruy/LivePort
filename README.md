@@ -9,6 +9,6 @@
 You can use code from any directory. Just enter in terminal ``` liveport ``` and command which you need.
 For example:
 ```
-$${\color{yellow}liveport}$$ setport 3000
+##FFFF00[liveport] setport 3000
 ```
 The above command changes the port for starting the server. Below, we will look at all the commands
