@@ -6,9 +6,8 @@
 5. Link the script globally: ``` npm link ```
   
 ## How to Use?
-You can use code from any directory. Just enter in terminal ``` liveport ``` and command which you need.
-For example:
+You can use code from any directory. Just enter ``` liveport ``` and the desired command in the terminal.
+For example, a command that changes the port for accessing the server:
 ```
-##FFFF00[liveport] setport 3000
+liveport setport 3000
 ```
-The above command changes the port for starting the server. Below, we will look at all the commands
