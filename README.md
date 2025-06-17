@@ -7,7 +7,7 @@
   
 ## How to Use?
 You can use code from any directory. Just enter ``` liveport ``` and the desired command in the terminal.<br>
-For example, a command that changes the port for accessing the server: ``` liveport setport 3000 ```, below and familiarize yourself with the commands<br>
+For example, a command that changes the port for accessing the server: ``` liveport setport 3000 ```, below and familiarize yourself with the commands.<br>
 **Please familiarize yourself with the list of commands (```liveport help```) and configurations (```liveport config```) before use!**
 ## Commands documentation:
 | Name         |  Description                                                       | value   |
