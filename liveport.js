@@ -5,7 +5,7 @@ const fs = require('fs');
 const kleur = require('kleur');
 const tools = require('./tools.js');
 const path = require('path');
- 
+
 // list of command
 const commands = {
     'help': () => {
@@ -17,7 +17,7 @@ const commands = {
         process.stdin.setEncoding('utf8');
         let newPort = process.argv.slice(2)[1];
 
-        if(!process.argv.slice(2)[1] || !/^\d+$/.test(process.argv.slice(2)[1])){
+        if(!newPort || !/^\d+$/.test(newPort) || newPort < 0 || newPort > 65535 || newPort == 0){
             newPort = '';
             process.stdout.write(`${kleur.red('The above port is not suitable,')} please write a new one (${kleur.underline('only numbers')}): `);
             process.stdin.on('data', (key) => {
@@ -29,15 +29,15 @@ const commands = {
                 
                 // if typed enter
                 if ((key.includes('\n') || key.includes('\r')) && newPort.length > 0 ) {
-                    console.log()
+                    console.log();
                     changePort();
                     process.exit();
 
                 }
-                if (key === '\u0003') return process.exit(); // if typed number
+                if (key === '\u0003') return process.exit(); // if typed Ctrl + C
 
                 // if typed number
-                if (/^\d$/.test(key)) {
+                if (/^\d$/.test(key) && newPort + key <= 65535 && newPort + key != 0) {
                     process.stdout.write(kleur.yellow(key));
                     newPort += key;
                 } else {
@@ -53,8 +53,9 @@ const commands = {
             process.exit();
         }
         function changePort(){
-            console.log(kleur.green('✅ The port has been successfully changed'));
-            tools.changeEnv('PORT', newPort);
+            console.log(kleur.green('✅ The port has been successfully changed'));  // inform the user
+            tools.changeEnv('PORT', newPort);                                       // change the port
+            tools.changeEnv('LASTUPDATEDATE', tools.getDate());                     // write the date when this operation was performed
         }
     },
     'openserver': () => {
@@ -96,8 +97,35 @@ const commands = {
         function confirm(bool){
             readline.close();
             tools.changeEnv('AUTOOPENSITE', bool);                          // change env variable
+            tools.changeEnv('LASTUPDATEDATE', tools.getDate());             // write the date when this operation was performed
             return console.log(kleur.green('✅ Succesfully chanched!'));    // inform the user that everything is done
         }
+    },
+    'config': () => {
+        require('dotenv').config();
+        const portStr = String(process.env.PORT);
+        const siteStr = String(process.env.AUTOOPENSITE);
+
+        const entries = [
+            ['Port', portStr],
+            ['Auto open site', siteStr],
+        ];
+
+        const maxLabelLen = Math.max(...entries.map(([label]) => label.length));
+        const maxValueLen = Math.max(...entries.map(([, value]) => value.length));
+        const tableWidth = maxLabelLen + 1 + maxValueLen;
+
+        const buildLine = (label, value) => {
+        const dotsCount = maxLabelLen - label.length;
+        const spacesAfterValue = maxValueLen - value.length;
+        return `| ${kleur.underline(label)}${' .'.repeat(dotsCount / 2)} : ${kleur.yellow(value)}${' '.repeat(spacesAfterValue)} |`;
+        };
+
+        console.log(`${kleur.blue('Configuring LivePort variables:')}
++${'-'.repeat(tableWidth + 4)}+
+${entries.map(([label, value]) => buildLine(label, value)).join('\n')}
++${'-'.repeat(tableWidth + 4)}+
+${kleur.gray('last updated: ' + process.env.LASTUPDATEDATE)}`);
     }
 }
 
@@ -107,7 +135,7 @@ if (Object.keys(commands).includes(process.argv.slice(2)[0])){ // check if the w
     process.stdin.setRawMode(true);
     process.stdin.resume();
     process.stdin.setEncoding('utf8');
-    process.stdout.write(`${kleur.red('No such command')}: "${kleur.yellow(process.argv.slice(2)[0])}"!\nYou can view the entire list of commands by entering the following:\n - ${kleur.bgBlack(kleur.bold(kleur.yellow(' liveport')) + ' help ')}\nWould you like to open it? (${kleur.green('y')} / ${kleur.red('n')}): `)
+    process.stdout.write(`${kleur.red('No such command')}: "${kleur.yellow(process.argv.slice(2)[0])}"!\nYou can view the entire list of commands by entering the following:\n - ${kleur.bgBlack(kleur.bold(kleur.yellow(' liveport')) + ' help ')}\nWould you like to open it? (${kleur.green('y')} / ${kleur.red('n')}): `);
     const answers = {
         'y': () => commands['help'](),
         'n': () => console.log(kleur.gray('Okay, bye. Closing the program'))

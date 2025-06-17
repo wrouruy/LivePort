@@ -18,10 +18,26 @@ module.exports = {
         });
     
         app.listen(PORT, '0.0.0.0', () => {
-            console.log(`${kleur.blue('Your server has launching on:')}\n - localhost: ${kleur.underline(`http://localhost:${PORT}`)}\n - IP: ${kleur.underline(`http://${os.networkInterfaces()['Wi-Fi'][1].address}:${PORT}`)}`);
+            console.log(`${kleur.blue('Your server has launching on:')}\n - localhost: ${kleur.underline(`http://localhost:${PORT}`)}\n - IP: ${kleur.underline(`http://${this.getIp()}:${PORT}`)}`);
         });
 
         if(process.env.AUTOOPENSITE == 'true') opn('http://localhost:' + PORT); // if env variable autoopensite has turned on, redirect the user to the website
+    },
+    getIp(){
+        const networkInterfaces = os.networkInterfaces();
+
+        let ipAddress;
+        for (const interfaceName in networkInterfaces) {
+            const interfaceDetails = networkInterfaces[interfaceName];
+            for (const detail of interfaceDetails) {
+                if (detail.family === 'IPv4' && !detail.internal) {
+                    ipAddress = detail.address;
+                    break;
+                }
+            }
+        if (ipAddress) break;
+        }
+        return ipAddress
     },
     getFilename(files){
         const readline = require('readline').createInterface({
@@ -60,5 +76,9 @@ module.exports = {
             newLines.push(`${key} = ${value}`);
         }
         fs.writeFileSync(envPath, newLines.join('\n'), 'utf-8');
+    },
+    getDate(){
+        const date = new Date();
+        return `${(String(date.getDate()).length == 1 ? '0' : '') + (date.getDate())}.${(String(date.getMonth() + 1).length == 1 ? '0' : '') + (date.getMonth() + 1)}.${date.getFullYear()} | ${(String(date.getHours()).length == 1 ? '0' : '') + (date.getHours())}:${(String(date.getMinutes() + 1).length == 1 ? '0' : '') + (date.getMinutes())}`
     }
 }
