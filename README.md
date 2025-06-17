@@ -1,6 +1,6 @@
 ## How to prepare the file for the start?
 1. Clone the repository: ``` git clone https://github.com/wrouruy/LivePort.git ```
-2. go to the created directory: ``` cd LivePort ```
+2. Go to the created directory: ``` cd LivePort ```
 4. Set depences: ``` npm install ```
 5. Make the script executable (UNIX systems only): ``` chmod +x liveport.js ```
 6. Link the script globally: ``` npm link ```
